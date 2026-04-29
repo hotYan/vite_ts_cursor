@@ -1,0 +1,23 @@
+---
+description: 统一请求层与业务异常处理规范
+alwaysApply: true
+---
+
+# HTTP And Error Handling
+
+- 所有 HTTP 请求必须通过 `src/utils/http.ts`，禁止页面内直接 `fetch/axios`。
+- 后端返回 `ApiResult<T>` 时由请求层统一解包；业务失败抛 `BusinessError`。
+- 界面层 `catch` 中统一用 `getErrorMessage(error)` 显示文案，不拼接随意错误文案。
+- 常见错误码统一复用 `ErrorCode`，新增错误码时优先在 `src/utils/errors.ts` 扩展。
+- 401/403/5xx/网络异常由请求层统一归一，页面层不重复写状态码分支。
+
+## 示例
+
+```ts
+try {
+  const data = await http.get<UserInfo>('/user/profile')
+  return data
+} catch (error) {
+  toast.error(getErrorMessage(error))
+}
+```

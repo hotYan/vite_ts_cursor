@@ -1,0 +1,52 @@
+{
+  "name": "vite_ts_cursor",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vue-tsc -b && vite build",
+    "preview": "vite preview",
+    "type-check": "vue-tsc --noEmit",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "format": "prettier . --write",
+    "prepare": "husky",
+    "commitlint": "commitlint --from=HEAD~1 --to=HEAD --verbose"
+  },
+  "dependencies": {
+    "axios": "^1.15.2",
+    "pinia": "^3.0.4",
+    "vue": "^3.5.32",
+    "vue-router": "^5.0.6"
+  },
+  "devDependencies": {
+    "@commitlint/cli": "^20.5.2",
+    "@commitlint/config-conventional": "^20.5.0",
+    "@eslint/js": "^10.0.1",
+    "@types/node": "^24.12.2",
+    "@typescript-eslint/eslint-plugin": "^8.59.1",
+    "@typescript-eslint/parser": "^8.59.1",
+    "@vitejs/plugin-vue": "^6.0.6",
+    "@vue/tsconfig": "^0.9.1",
+    "eslint": "^10.2.1",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-vue": "^10.9.0",
+    "husky": "^9.1.7",
+    "lint-staged": "^16.4.0",
+    "prettier": "^3.8.3",
+    "typescript": "~6.0.2",
+    "vite": "^8.0.10",
+    "vue-eslint-parser": "^10.4.0",
+    "vue-tsc": "^3.2.7"
+  },
+  "packageManager": "pnpm@10.33.2",
+  "lint-staged": {
+    "*.{js,ts,vue}": [
+      "eslint --fix"
+    ],
+    "*.{json,md,css}": [
+      "prettier --write"
+    ]
+  }
+}

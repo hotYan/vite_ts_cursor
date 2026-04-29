@@ -1,0 +1,20 @@
+---
+description: Vue3+TS 项目架构与分层约束
+alwaysApply: true
+---
+
+# Project Architecture
+
+- 技术栈固定：`Vite + Vue3 + TypeScript + Pinia + Vue Router + pnpm`。
+- 目录分层保持稳定：`views` 页面、`components` 组件、`apis` 接口、`stores` 状态、`utils` 工具、`types` 类型。
+- 新增业务代码时，优先复用已有模块；避免把接口调用、状态管理和页面渲染耦合在同一文件。
+- 路径导入使用 `@/` 别名，不使用跨层级相对路径链（如 `../../../`）。
+- 页面级逻辑放在 `views`，可复用逻辑抽到 `components` 或 `utils`。
+
+## 示例
+
+```ts
+// 推荐
+import http from '@/utils/http'
+import { useCounterStore } from '@/stores/counter'
+```

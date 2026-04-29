@@ -1,0 +1,19 @@
+---
+description: 工程质量与提交规范约束
+alwaysApply: true
+---
+
+# Engineering Quality
+
+- 默认使用 `pnpm`；新增依赖前优先检查是否已有同类能力。
+- 代码变更后至少保证：`pnpm run type-check`、`pnpm run lint`、`pnpm run build` 可通过。
+- 提交信息遵循 Conventional Commits（如 `feat:`、`fix:`、`chore:`）。
+- 提交前必须通过 `husky + lint-staged + commitlint`；不要绕过 hooks。
+- 文档更新同步到 `README.md`，尤其是新增环境变量、脚本、目录约定时。
+
+## 示例
+
+```bash
+pnpm run type-check && pnpm run lint && pnpm run build
+git commit -m "feat: add order list page"
+```

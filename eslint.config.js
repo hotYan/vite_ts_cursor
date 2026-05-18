@@ -25,6 +25,7 @@ export default [
     },
     rules: {
       ...tsPlugin.configs.recommended.rules,
+      'no-undef': 'off', // TypeScript 编译器已处理未定义变量检查
     },
   },
   ...vue.configs['flat/recommended'],

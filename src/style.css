@@ -18,3 +18,68 @@ body {
 #app {
   min-height: 100vh;
 }
+:root {
+  /* 主题颜色 */
+  --primary-color: #1890ff;
+  --secondary-color: #2c3e50;
+
+  --header-height: 92px;
+  --header-minheight: 48px;
+  --logo-height: 68px;
+  --header-top-height: 48px;
+  --tabs-height: 40px;
+  --box-shadow: 0 1px 2px rgb(0, 21, 41, 0.08);
+  --un-ring-offset-shadow: 0 0 rgb(0 0 0 / 0);
+  --un-ring-shadow: 0 0 rgb(0 0 0 / 0);
+  --menu-hover-bg: #1890ff1a;
+  --menu-hover-color: #1f2021;
+  --menu-hover-font-weight: 500;
+  --menu-selected-bg: #1677ff;
+  --menu-selected-color: white;
+}
+
+.box_shadow {
+  --un-shadow: var(--box-shadow);
+  box-shadow: var(--un-ring-offset-shadow), var(--un-ring-shadow), var(--un-shadow);
+}
+
+.icon_20 {
+  font-size: 20px;
+}
+
+.icon_30 {
+  font-size: 20px;
+}
+
+.font_size_16 {
+  font-size: 16px;
+}
+
+.flex_center {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.cursor_pointer {
+  cursor: pointer;
+}
+
+/* ==== 全局覆盖menu样式 ==== */
+/* ==== 全局覆盖menu样式 ==== */
+.ant-menu-inline .ant-menu-item,
+.ant-menu-inline .ant-menu-submenu-title {
+  width: calc(100% - 8px) !important;
+}
+
+.ant-menu-item .anticon,
+.ant-menu-submenu-title .anticon {
+  margin-right: 10px !important;
+}
+/* 针对折叠后的特殊处理，确保图标不偏移 */
+.ant-layout-sider-collapsed .ant-menu-item .anticon {
+  margin-right: 0 !important;
+}
+.ant-menu-inline-collapsed > .ant-menu-submenu > .ant-menu-submenu-title {
+  padding: 0 32px !important;
+}

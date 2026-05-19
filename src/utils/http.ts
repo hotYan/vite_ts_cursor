@@ -3,7 +3,7 @@ import type { ApiResult, ErrorPayload } from '@/types/common'
 import { BusinessError, ErrorCode } from '@/utils/errors'
 
 const httpClient = axios.create({
-  baseURL: import.meta.env.VITE_API_BASE_URL,
+  baseURL:'/base',// import.meta.env.VITE_API_BASE_URL,
   timeout: 10000,
 })
 
@@ -16,7 +16,7 @@ const isApiResult = <T>(data: unknown): data is ApiResult<T> => {
 }
 
 httpClient.interceptors.request.use((config) => {
-  const token = localStorage.getItem('token')
+  const token = sessionStorage.getItem('token')
   if (token) {
     config.headers.Authorization = `Bearer ${token}`
   }
@@ -25,6 +25,9 @@ httpClient.interceptors.request.use((config) => {
 
 httpClient.interceptors.response.use(
   (response) => {
+     // 获取所有响应头
+    const captchaId = response?.headers?.['captcha-id']
+
     const payload = response.data
     if (isApiResult(payload)) {
       if (payload.code !== ErrorCode.Success) {
@@ -32,13 +35,15 @@ httpClient.interceptors.response.use(
       }
       return payload.data
     }
-    return payload
+
+    // 成功响应直接返回数据
+    return captchaId ? { data: payload, captchaId } : payload
   },
   (error) => {
     const axiosError = error as AxiosError<ErrorPayload>
     const status = axiosError.response?.status
     if (status === 401) {
-      localStorage.removeItem('token')
+      sessionStorage.removeItem('token')
       return Promise.reject(new BusinessError(ErrorCode.Unauthorized, '登录状态已失效，请重新登录'))
     }
     if (status === 403) {
@@ -54,7 +59,9 @@ httpClient.interceptors.response.use(
     const backendCode = axiosError.response?.data?.code
     const backendMessage = axiosError.response?.data?.message
     if (typeof backendCode === 'number' && typeof backendMessage === 'string') {
-      return Promise.reject(new BusinessError(backendCode, backendMessage, axiosError.response?.data))
+      return Promise.reject(
+        new BusinessError(backendCode, backendMessage, axiosError.response?.data),
+      )
     }
 
     return Promise.reject(new BusinessError(ErrorCode.Unknown, '请求失败，请稍后重试', axiosError))
@@ -62,15 +69,26 @@ httpClient.interceptors.response.use(
 )
 
 const http = {
-  get<T>(url: string, config?: AxiosRequestConfig): Promise<T> {
-    return httpClient.get<T, T>(url, config)
+  get<T>(url: string, params?: Record<string, unknown>, config?: AxiosRequestConfig): Promise<T> {
+    return httpClient.get<T, T>(url, { ...config, params })
   },
+
+  getBlob(url: string, params?: Record<string, unknown>, config?: AxiosRequestConfig): Promise<Blob> {
+    return httpClient.get<Blob, Blob>(url, { ...config, params, responseType: 'blob' })
+  },
+
   post<T>(url: string, data?: unknown, config?: AxiosRequestConfig): Promise<T> {
     return httpClient.post<T, T>(url, data, config)
   },
+
+  postBlob<T>(url: string, data?: unknown, config?: AxiosRequestConfig): Promise<T> {
+    return httpClient.post<T, T>(url, data, { ...config, responseType: 'blob' })
+  },
+
   put<T>(url: string, data?: unknown, config?: AxiosRequestConfig): Promise<T> {
     return httpClient.put<T, T>(url, data, config)
   },
+
   delete<T>(url: string, config?: AxiosRequestConfig): Promise<T> {
     return httpClient.delete<T, T>(url, config)
   },

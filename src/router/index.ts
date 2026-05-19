@@ -108,18 +108,28 @@ const router = createRouter({
   ],
 })
 
+// 白名单：无需登录即可访问的路由
+const whiteList = ['/login']
+
 router.beforeEach((to) => {
-  const token = localStorage.getItem('token')
-  if (to.meta.requiresAuth && !token) {
+  const token = sessionStorage.getItem('token')
+
+  if (token) {
+    // 已登录：访问登录页时直接跳转到首页
+    if (to.path === '/login') {
+      return { path: '/' }
+    }
+    return true
+  } else {
+    // 未登录：白名单内放行，否则跳转到登录页
+    if (whiteList.includes(to.path)) {
+      return true
+    }
     return {
       path: '/login',
       query: { redirect: to.fullPath },
     }
   }
-  if (to.meta.guestOnly && token) {
-    return { path: '/protected' }
-  }
-  return true
 })
 
 export default router
